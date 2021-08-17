@@ -1,28 +1,41 @@
 package com.wj.theatreservice;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Seat {
 
-    private int row;
-    private int column;
+    private final int row;
+    private final int column;
+    private final int price;
+    private boolean isPurchased;
+    public int getPrice() { return price; }
 
-    public int getRow() {
-        return row;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
-    }
+    public int getRow() { return row; }
 
     public int getColumn() {
         return column;
     }
 
-    public void setColumn(int column) {
-        this.column = column;
+    @JsonIgnore
+    public boolean isPurchased() {
+        return isPurchased;
     }
 
-    public Seat(int row, int column) {
+    public void setIsPurchased(boolean state){
+        this.isPurchased = state;
+    }
+
+    public Seat(){
+        row = 1;
+        column = 1;
+        price = 1;
+        isPurchased = false;
+    }
+
+    public Seat(int row, int column, int price) {
         this.row = row;
         this.column = column;
+        this.price = price;
+        isPurchased = false;
     }
 }

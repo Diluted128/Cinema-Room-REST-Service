@@ -22,4 +22,11 @@ class GlobalControllerExceptionHandler {
     private String handleMessage(SeatIsOutOfBoundsException e) {
         return "{\"error\": \"The number of a row or a column is out of bounds!\"}";
     }
+
+    @ExceptionHandler(WrongTokenException.class)
+    @ResponseBody
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    private String handleMessage(WrongTokenException e) {
+        return "{\"error\": \"Wrong token!\"}";
+    }
 }

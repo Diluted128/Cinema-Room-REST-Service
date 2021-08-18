@@ -1,5 +1,6 @@
-package com.wj.theatreservice;
+package com.wj.theatreservice.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -11,12 +12,23 @@ public class TheatreRoom {
     private final int total_columns;
 
     private final List<Seat> available_seats;
+    private final List<Ticket> purchasedTickets;
+
+    @JsonIgnore
+    public List<Ticket> getPurchasedTickets() {
+        return purchasedTickets;
+    }
+
+    public void addPurchasedTicket(Ticket ticket){
+        purchasedTickets.add(ticket);
+    }
 
     public TheatreRoom(){
 
         total_rows = 9;
         total_columns = 9;
         available_seats = new ArrayList<>();
+        purchasedTickets =  new ArrayList<>();
 
         for (int i = 1; i <= total_columns; i++) {
             for (int j = 1; j <= total_rows; j++)
@@ -46,11 +58,11 @@ public class TheatreRoom {
         }
     }
 
-    public boolean isSeatPurchased(int row, int column){
+    public Seat getSeatByRowAndColumn(int row, int column){
         return available_seats.stream()
                 .filter(seat -> seat.getRow() == row && seat.getColumn() == column)
                 .findFirst()
-                .get()
-                .isPurchased();
+                .get();
     }
+
 }

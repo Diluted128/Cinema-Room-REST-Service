@@ -1,4 +1,4 @@
-package com.wj.theatreservice;
+package com.wj.theatreservice.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -7,7 +7,7 @@ public class Seat {
     private final int row;
     private final int column;
     private final int price;
-    private boolean isPurchased;
+    private transient boolean isPurchased;
     public int getPrice() { return price; }
 
     public int getRow() { return row; }

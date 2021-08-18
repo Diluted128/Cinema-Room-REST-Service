@@ -4,12 +4,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.wj.theatreservice.Exception.AlreadyPurchasedException;
 import com.wj.theatreservice.Exception.SeatIsOutOfBoundsException;
+import com.wj.theatreservice.Exception.WrongPasswordException;
 import com.wj.theatreservice.Model.Seat;
 import com.wj.theatreservice.Model.TheatreRoom;
 import com.wj.theatreservice.Model.Ticket;
 import com.wj.theatreservice.Exception.WrongTokenException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +27,21 @@ public class DataAccess {
 
     public TheatreRoom getTheatreRoomInfo() {
         return theatreRoom;
+    }
+
+    public int getNumberOfAvailableSeats(){
+        return 81 - getNumberOfPurchasedTickets();
+    }
+
+    public int getNumberOfPurchasedTickets(){
+        return theatreRoom.getPurchasedTickets().size();
+    }
+
+    public int calculateIncome(){
+
+        return theatreRoom.getPurchasedTickets().stream()
+                .map(Ticket -> Ticket.getTicket().getPrice())
+                .reduce(0, Integer::sum);
     }
 
     public Ticket getPurchasedTicket(Seat seatToPurchase) throws SeatIsOutOfBoundsException, AlreadyPurchasedException {
@@ -47,7 +62,7 @@ public class DataAccess {
         else throw new SeatIsOutOfBoundsException("{\"error\": \"The number of a row or a column is out of bounds!\"}");
     }
 
-    public Object getReturnedTicket(@RequestBody String token) throws WrongTokenException {
+    public Object getReturnedTicket(String token) throws WrongTokenException {
 
         JsonElement a = JsonParser.parseString(token);
         String Token = a.getAsJsonObject().get("token").getAsString();
@@ -58,6 +73,8 @@ public class DataAccess {
 
         if (optionalTicket.isPresent()) {
 
+            theatreRoom.returnPurchasedTicket(Token);
+
             Map<String, Object> jsonMap =  new HashMap<>();
             jsonMap.put("returned_ticket",optionalTicket.get().getTicket());
             return jsonMap;
@@ -65,4 +82,17 @@ public class DataAccess {
         else throw new WrongTokenException("{\"error\": \"Wrong token!\"}");
     }
 
+    public Object getTheatreRoomStatistics(String password) throws WrongPasswordException {
+        if(password.equals("super_secret")){
+             Map<String,Object> map = new HashMap<>();
+             map.put("current_income", calculateIncome());
+             map.put("number_of_available_seats", getNumberOfAvailableSeats());
+             map.put("number_of_purchased_tickets",getNumberOfPurchasedTickets());
+
+             return map;
+        }
+        else{
+            throw new WrongPasswordException("\"error\": \"The password is wrong!\"");
+        }
+    }
 }

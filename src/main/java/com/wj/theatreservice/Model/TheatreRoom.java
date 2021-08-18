@@ -8,20 +8,13 @@ import java.util.List;
 
 @Component
 public class TheatreRoom {
+
     private final int total_rows;
     private final int total_columns;
 
     private final List<Seat> available_seats;
     private final List<Ticket> purchasedTickets;
 
-    @JsonIgnore
-    public List<Ticket> getPurchasedTickets() {
-        return purchasedTickets;
-    }
-
-    public void addPurchasedTicket(Ticket ticket){
-        purchasedTickets.add(ticket);
-    }
 
     public TheatreRoom(){
 
@@ -32,10 +25,10 @@ public class TheatreRoom {
 
         for (int i = 1; i <= total_columns; i++) {
             for (int j = 1; j <= total_rows; j++)
-                if(i <= 4)
-                    available_seats.add(new Seat(i, j, 10));
+                if(j <= 4)
+                    available_seats.add(new Seat(j, i, 10));
                 else
-                    available_seats.add(new Seat(i, j, 8));
+                    available_seats.add(new Seat(j, i, 8));
         }
     }
 
@@ -45,6 +38,15 @@ public class TheatreRoom {
 
     public int getTotal_columns() {
         return total_columns;
+    }
+
+    @JsonIgnore
+    public List<Ticket> getPurchasedTickets() {
+        return purchasedTickets;
+    }
+
+    public void addPurchasedTicket(Ticket ticket){
+        purchasedTickets.add(ticket);
     }
 
     public List<Seat> getAvailable_seats() {
@@ -65,4 +67,14 @@ public class TheatreRoom {
                 .get();
     }
 
+    public void returnPurchasedTicket(String Token){
+        int index = 0;
+        for (int i=0; i<purchasedTickets.size(); i++){
+            if(purchasedTickets.get(i).getToken().equals(Token)) {
+                index = i;
+                break;
+            }
+        }
+        purchasedTickets.remove(index);
+    }
 }

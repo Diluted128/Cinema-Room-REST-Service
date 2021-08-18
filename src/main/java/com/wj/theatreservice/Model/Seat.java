@@ -8,6 +8,21 @@ public class Seat {
     private final int column;
     private final int price;
     private transient boolean isPurchased;
+
+    public Seat(){
+        row = 1;
+        column = 1;
+        price = 1;
+        isPurchased = false;
+    }
+
+    public Seat(int row, int column, int price) {
+        this.row = row;
+        this.column = column;
+        this.price = price;
+        isPurchased = false;
+    }
+
     public int getPrice() { return price; }
 
     public int getRow() { return row; }
@@ -23,19 +38,5 @@ public class Seat {
 
     public void setIsPurchased(boolean state){
         this.isPurchased = state;
-    }
-
-    public Seat(){
-        row = 1;
-        column = 1;
-        price = 1;
-        isPurchased = false;
-    }
-
-    public Seat(int row, int column, int price) {
-        this.row = row;
-        this.column = column;
-        this.price = price;
-        isPurchased = false;
     }
 }

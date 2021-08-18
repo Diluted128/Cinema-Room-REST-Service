@@ -29,4 +29,10 @@ class GlobalControllerExceptionHandler {
     private String handleMessage(WrongTokenException e) {
         return "{\"error\": \"Wrong token!\"}";
     }
+
+    @ExceptionHandler(WrongPasswordException.class)
+    @ResponseBody
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    private String handleMessage(WrongPasswordException e) { return "{\"error\": \"The password is wrong!\"}"; }
+
 }
